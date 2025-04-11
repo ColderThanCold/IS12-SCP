@@ -100,6 +100,7 @@
 	var/force_wielded = 0
 
 	var/table_pickup_sound = null //Sound it makes when you take something off a table.
+	var/table_place_sound = null //Sound it makes when you place something on a table.
 
 
 /obj/item/New()
@@ -415,6 +416,10 @@
 		zoom(user) //binoculars, scope, etc
 	if(wielded)
 		unwield(user)
+	if(locate(/obj/structure/table) in loc)
+		if(table_place_sound)
+			playsound(src, table_place_sound, 50)
+	return
 
 	update_twohanding()
 	if(user)
