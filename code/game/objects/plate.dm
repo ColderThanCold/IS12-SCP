@@ -5,5 +5,5 @@
 	icon_state = "plate"
 	drop_sound = 'sound/items/plate_drop.ogg'
 	table_pickup_sound = 'sound/items/plate_pickup.ogg'
-	table_place_sound = 'sound/items/plate_drop.ogg'
+	table_place_sound = 'sound/items/plate_place.ogg'
 	w_class = ITEM_SIZE_SMALL
