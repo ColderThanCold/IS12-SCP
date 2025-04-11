@@ -302,6 +302,7 @@
 	return 0
 
 /obj/machinery/microwave/proc/start()
+	playsound(src.loc, 'sound/machines/microwave_cooking.ogg', 50, 1)
 	src.visible_message("<span class='notice'>The microwave turns on.</span>", "<span class='notice'>You hear a microwave.</span>")
 	src.operating = 1
 	src.updateUsrDialog()
