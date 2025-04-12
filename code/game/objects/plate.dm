@@ -22,13 +22,13 @@ var/shard_number = 4
 		Destroy()
 		for(var/iteration in 1 to shard_number)
 			new/obj/item/plate_shard(hit_atom)
+			randpixel = 20
 
 //plate shards
 
 /obj/item/plate_shard/New()
 	..()
 	icon_state = pick("plateshard1","plateshard2","plateshard3",)
-	randpixel = 20
 
 
 /obj/item/plate_shard
