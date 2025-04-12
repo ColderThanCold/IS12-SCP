@@ -24,8 +24,6 @@ var/shard_number = 4
 			new/obj/item/plate_shard(hit_atom)
 				randpixel = 10
 
-
-
 //plate shards
 
 /obj/item/plate_shard/New()
@@ -45,8 +43,42 @@ var/shard_number = 4
 	sharpness = 5
 
 
-
 /obj/item/plate_shard/throw_impact(atom/hit_atom)
 	..()
 	if(istype(hit_atom,/mob/living))
 		playsound(src, "sound/weapons/bladeslice.ogg", 70, 1)
+
+
+/obj/item/plate_shard/Crossed(AM as mob|obj)
+	..()
+	if(isliving(AM))
+		var/mob/M = AM
+
+		if(M.buckled) //wheelchairs, office chairs, rollerbeds
+			return
+
+		playsound(src.loc, 'sound/effects/glass_step.ogg', 50, 1)
+		if(ishuman(M))
+			var/mob/living/carbon/human/H = M
+
+			if(H.species.siemens_coefficient<0.5 || (H.species.species_flags & (SPECIES_FLAG_NO_EMBED|SPECIES_FLAG_NO_MINOR_CUT))) //Thick skin.
+				return
+
+			if( H.shoes || ( H.wear_suit && (H.wear_suit.body_parts_covered & FEET) ) )
+				return
+
+			to_chat(M, "<span class='danger'>You step on \the [src]!</span>")
+			var/list/check = list(BP_L_FOOT, BP_R_FOOT)
+			while(check.len)
+				var/picked = pick(check)
+				var/obj/item/organ/external/affecting = H.get_organ(picked)
+				if(affecting)
+					if(affecting.robotic >= ORGAN_ROBOT)
+						return
+					affecting.take_damage(5, 0)
+					H.updatehealth()
+					if(affecting.can_feel_pain())
+						H.Weaken(3)
+					return
+				check -= picked
+			return
