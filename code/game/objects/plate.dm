@@ -82,3 +82,48 @@ var/shard_number = 4
 					return
 				check -= picked
 			return
+
+
+//shattered plate bits
+
+/obj/effect/decal/cleanable/shatteredplate
+	name = "small plate shards"
+	desc = "Looks like we won't be having dinner."
+	icon = 'icons/obj/kitchen.dmi'
+	icon_state = "shattered_plate"
+
+//TO DO: make it so if you have no shoes on and go in walk mode you don't step on the little bits
+
+/obj/effect/decal/cleanable/shatteredplate/Crossed(AM as mob|obj)
+	..()
+	if(isliving(AM))
+		var/mob/M = AM
+
+		if(M.buckled) //wheelchairs, office chairs, rollerbeds
+			return
+
+		playsound(src.loc, 'sound/effects/glass_step.ogg', 50, 1)
+		if(ishuman(M))
+			var/mob/living/carbon/human/H = M
+
+			if(H.species.siemens_coefficient<0.5 || (H.species.species_flags & (SPECIES_FLAG_NO_EMBED|SPECIES_FLAG_NO_MINOR_CUT))) //Thick skin.
+				return
+
+			if( H.shoes || ( H.wear_suit && (H.wear_suit.body_parts_covered & FEET) ) )
+				return
+
+			to_chat(M, "<span class='danger'>You step on \the [src]!</span>")
+			var/list/check = list(BP_L_FOOT, BP_R_FOOT)
+			while(check.len)
+				var/picked = pick(check)
+				var/obj/item/organ/external/affecting = H.get_organ(picked)
+				if(affecting)
+					if(affecting.robotic >= ORGAN_ROBOT)
+						return
+					affecting.take_damage(5, 0)
+					H.updatehealth()
+					if(affecting.can_feel_pain())
+						H.Weaken(3)
+					return
+				check -= picked
+			return
