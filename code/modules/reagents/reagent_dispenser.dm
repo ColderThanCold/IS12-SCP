@@ -227,6 +227,25 @@
 	initial_capacity = 500
 	initial_reagent_types = list(/datum/reagent/water = 1)
 
+	on_reagent_change()
+		update_icon()
+		overlays.Cut()
+		if(reagents.total_volume)
+			var/image/filling = image('icons/obj/reagentfillings.dmi', src, "water_cooler10")
+
+
+			switch(src.reagents.total_volume)
+				if(0 to 4)		filling.icon_state = "water_cooler-10"
+				if(5 to 29) 	filling.icon_state = "water_cooler10"
+				if(30 to 74)	filling.icon_state = "water_cooler25"
+				if(75 to 174)	filling.icon_state = "water_cooler50"
+				if(175 to 274)	filling.icon_state = "water_cooler75"
+				if(275 to 349)	filling.icon_state = "water_cooler80"
+				if(350 to INFINITY)	filling.icon_state = "water_cooler100"
+
+			filling.color = reagents.get_color()
+			overlays += filling
+
 /obj/structure/reagent_dispensers/water_cooler/attackby(obj/item/W as obj, mob/user as mob)
 	if (istype(W,/obj/item/wrench))
 		src.add_fingerprint(user)
