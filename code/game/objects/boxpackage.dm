@@ -16,7 +16,7 @@ var/closed = TRUE
 
 		icon_state = "box-notape"
 		closed = TRUE
-		user.visible_message("<span class='bnotice'>[user] rips off the tape on the box!</pan>")
+		user.visible_message("<span class='bnotice'>[user] rips off the tape on the [src]!</pan>")
 
 
 
