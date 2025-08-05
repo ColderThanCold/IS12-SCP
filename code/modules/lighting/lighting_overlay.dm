@@ -94,6 +94,7 @@
 	var/set_luminosity = max > 1e-6
 	#endif
 
+
 	if((rr & gr & br & ar) && (rg + gg + bg + ag + rb + gb + bb + ab == 8))
 	//anything that passes the first case is very likely to pass the second, and addition is a little faster in this case
 		icon_state = "transparent"
@@ -103,15 +104,24 @@
 		color = null
 	else
 		icon_state = null
-		color = list(
-			rr, rg, rb, 00,
-			gr, gg, gb, 00,
-			br, bg, bb, 00,
-			ar, ag, ab, 00,
-			00, 00, 00, 01
-		)
+	animate(src, color = list(
+		rr, rg, rb, 00,
+		gr, gg, gb, 00,
+		br, bg, bb, 00,
+		ar, ag, ab, 00,
+		00, 00, 00, 01
+	), time = 5)
+
+	if(isturf(loc))
+		if(T.get_lumcount() <= LIGHTING_SOFT_THRESHOLD+0.4) //hi farweb
+			for(var/obj/item/I in T)
+				animate(I, color = list(0.3,0.3,0.3,0,0.3,0.3,0.3,0,0.3,0.3,0.3,0,0.0,0.0,0.0,1), time = 5)
+		else
+			for(var/obj/item/I in T)                        //hi farweb
+				animate(I, color = null, time = 5)
 
 	luminosity = set_luminosity
+
 
 // Variety of overrides so the overlays don't get affected by weird things.
 /atom/movable/lighting_overlay/ex_act()
